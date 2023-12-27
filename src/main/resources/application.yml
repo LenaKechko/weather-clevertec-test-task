@@ -1,0 +1,16 @@
+yandex:
+  key: d86f2e3f-e85a-4abd-9d86-3cb87c3d159d
+
+server:
+  port: 8080
+
+logging:
+  level:
+    ru.clevertec.weathertesttask: DEBUG
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      database: weather_database
+      port: 27017
