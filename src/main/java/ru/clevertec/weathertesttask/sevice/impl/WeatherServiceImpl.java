@@ -1,6 +1,8 @@
 package ru.clevertec.weathertesttask.sevice.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 import ru.clevertec.weathertesttask.exception.IncorrectDataOfWeather;
@@ -24,7 +26,7 @@ public class WeatherServiceImpl implements WeatherService {
         System.out.println("I am service");
         return weatherRepository.getWeather(request.longitude(), request.latitude(), request.limit())
                 .map(response -> new WeatherResponseDto(
-                        LocalDateTime.ofInstant(Instant.ofEpochMilli(response.now()), ZoneId.of("Europe/Minsk")),
+                        response.date(),
                         response.nameLocation(),
                         new WeatherModel(response.model().temperature(),
                                 response.model().feelsTemperature(),
