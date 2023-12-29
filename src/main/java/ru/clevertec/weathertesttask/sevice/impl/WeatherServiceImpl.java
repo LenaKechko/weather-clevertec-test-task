@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.clevertec.weathertesttask.dto.ForecastWeatherResponseDto;
 import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 import ru.clevertec.weathertesttask.entity.YandexResponse;
+import ru.clevertec.weathertesttask.entity.model.ForecastModel;
 import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 import ru.clevertec.weathertesttask.exception.IncorrectDataOfWeather;
+import ru.clevertec.weathertesttask.model.WeatherCondition;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
+import ru.clevertec.weathertesttask.model.WeatherWindDir;
 import ru.clevertec.weathertesttask.repository.impl.WeatherRepository;
 import ru.clevertec.weathertesttask.sevice.WeatherService;
 
@@ -29,10 +32,10 @@ public class WeatherServiceImpl implements WeatherService {
                         response.date().withZoneSameInstant(response.info().tzInfo().nameTimeZone()),
                         new WeatherModel(response.model().temperature(),
                                 response.model().feelsTemperature(),
-                                response.model().condition(),
+                                WeatherCondition.getCondition(response.model().condition()),
                                 response.model().windSpeed(),
                                 response.model().windGust(),
-                                response.model().windDir(),
+                                WeatherWindDir.getWindDir(response.model().windDir()),
                                 response.model().pressureInMm()
                         )
                 ))
@@ -51,7 +54,7 @@ public class WeatherServiceImpl implements WeatherService {
                 .toList();
     }
 
-    private ForecastWeatherResponseDto createForecastWeatherResponseDto(YandexResponse.ForecastModel model) {
+    private ForecastWeatherResponseDto createForecastWeatherResponseDto(ForecastModel model) {
         return new ForecastWeatherResponseDto(model.date(),
                 Map.of("morning", model.partOfDayList().morning(),
                         "day", model.partOfDayList().day(),

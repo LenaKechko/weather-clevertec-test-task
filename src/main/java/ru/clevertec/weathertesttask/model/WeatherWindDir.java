@@ -19,4 +19,8 @@ public enum WeatherWindDir {
     WeatherWindDir(String nameWindDir) {
         this.nameWindDir = nameWindDir;
     }
+
+    public static String getWindDir(String windDir) {
+        return WeatherWindDir.valueOf(windDir.toUpperCase()).getNameWindDir();
+    }
 }

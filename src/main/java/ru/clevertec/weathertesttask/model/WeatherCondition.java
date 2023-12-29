@@ -28,4 +28,8 @@ public enum WeatherCondition {
         this.nameCondition = nameCondition;
     }
 
+    public static String getCondition(String condition) {
+        return WeatherCondition.valueOf(condition.toUpperCase()).getNameCondition();
+    }
+
 }
