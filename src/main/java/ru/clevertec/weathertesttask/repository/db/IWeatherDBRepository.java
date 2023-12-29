@@ -1,4 +1,4 @@
-package ru.clevertec.weathertesttask.db.repository;
+package ru.clevertec.weathertesttask.repository.db;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

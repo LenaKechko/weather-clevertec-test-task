@@ -6,6 +6,10 @@ import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 
 import java.util.List;
 
+/**
+ * Интерфейс для сервиса
+ */
+
 public interface WeatherService {
 
     WeatherResponseDto getWeather(WeatherRequest request);

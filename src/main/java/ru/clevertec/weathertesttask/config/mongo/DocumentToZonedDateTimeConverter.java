@@ -14,10 +14,19 @@ import java.util.Date;
 import static ru.clevertec.weathertesttask.config.mongo.ZonedDateTimeToDocumentConverter.DATE_TIME;
 import static ru.clevertec.weathertesttask.config.mongo.ZonedDateTimeToDocumentConverter.ZONE;
 
+/**
+ * Класс для настройки конвертирования данных из БД в объект ZonedDateTime
+ */
 @Component
 @ReadingConverter
 public class DocumentToZonedDateTimeConverter implements Converter<Document, ZonedDateTime> {
 
+    /**
+     * Метод определяющий правила конвертирования
+     *
+     * @param document the source object to convert, which must be an instance of {@code S} (never {@code null})
+     * @return объект ZonedDateTime
+     */
     @Override
     public ZonedDateTime convert(@Nullable Document document) {
         if (document == null) return null;

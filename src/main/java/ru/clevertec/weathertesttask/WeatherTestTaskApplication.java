@@ -6,6 +6,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import ru.clevertec.weathertesttask.config.YandexConfig;
 
+/**
+ * Класс для запуска приложения
+ * Аннотация @EnableFeignClients служит для подключения и конфигурации пакета FeignClients,
+ * который работает свнешним API
+ * Аннотаия @EnableConfigurationProperties подключает файл конфигурации с Яндекс.Погода
+ */
+
 @SpringBootApplication
 @EnableFeignClients
 @EnableConfigurationProperties(YandexConfig.class)

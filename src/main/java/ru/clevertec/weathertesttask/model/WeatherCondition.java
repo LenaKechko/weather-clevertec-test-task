@@ -2,9 +2,15 @@ package ru.clevertec.weathertesttask.model;
 
 import lombok.Getter;
 
+/**
+ * Перечисление для погодных условий, полученных от внешнего api
+ */
 @Getter
 public enum WeatherCondition {
 
+    /**
+     * Перечислены допустимые значения
+     */
     CLEAR("ясно"),
     PARTLY_CLOUDY("малооблачно"),
     CLOUDY("облачно с прояснениями"),
@@ -22,14 +28,28 @@ public enum WeatherCondition {
     THUNDERSTORM_WITH_RAIN("дождь с грозой"),
     THUNDERSTORM_WITH_HAIL("гроза с градом");
 
+    /**
+     * Поле определяющее имя константы
+     */
     private final String nameCondition;
 
+    /**
+     * Конструктор
+     *
+     * @param nameCondition имя
+     */
     WeatherCondition(String nameCondition) {
         this.nameCondition = nameCondition;
     }
 
+    /**
+     * Метод для возвращения значения константы по ее имени
+     *
+     * @param condition константа
+     * @return значение константы
+     */
     public static String getCondition(String condition) {
-        return WeatherCondition.valueOf(condition.toUpperCase()).getNameCondition();
+        return WeatherCondition.valueOf(condition.replaceAll("-", "_").toUpperCase()).getNameCondition();
     }
 
 }

@@ -6,9 +6,17 @@ import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Класс для настройки работы MongoDB c типом данных ZonedDateTime
+ */
 @Configuration
 public class MongoDBConfig {
 
+    /**
+     * Бин для указания классов-конвертирования из ZonedDateTimed в объект для БД и обратно
+     *
+     * @return объект с настройками конвертирования
+     */
     @Bean
     public MongoCustomConversions customConversions() {
         return new MongoCustomConversions(asList(
