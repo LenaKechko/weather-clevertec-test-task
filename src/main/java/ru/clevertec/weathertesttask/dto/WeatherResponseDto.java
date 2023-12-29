@@ -1,11 +1,10 @@
 package ru.clevertec.weathertesttask.dto;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 
 import java.time.ZonedDateTime;
 
-@Builder
-public record WeatherResponseDto(ZonedDateTime date,
-                                 WeatherModel model) {
+public record WeatherResponseDto(@JsonProperty("date") ZonedDateTime date,
+                                     @JsonProperty("now") WeatherModel model) {
 }
