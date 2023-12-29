@@ -12,6 +12,7 @@ public interface IYandexResponse {
     @GetMapping
     YandexResponse getWeather(
             @RequestParam(name = "lon") double longitude,
-            @RequestParam(name = "lat") double latitude,
-            @RequestParam(name = "limit") int limit);
+            @RequestParam(name = "lat") double latitude);
+//    ,
+//            @RequestParam(name = "limit") int limit);
 }

@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Getter
@@ -20,13 +20,8 @@ public class WeatherResponse {
 
     @Id
     private UUID id;
-    private LocalDateTime date;
-    private String nameCity;
+    private ZonedDateTime date;
     private WeatherModel model;
-//    WeatherResponse(LocalDateTime date,
-//                    String nameCity,
-//                    WeatherModel model) {
-//        this(UUID.randomUUID(), date, nameCity, model);
-//    }
+
 }
 

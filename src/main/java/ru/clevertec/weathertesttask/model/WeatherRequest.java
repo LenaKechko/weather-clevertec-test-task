@@ -12,5 +12,8 @@ public record WeatherRequest(Double longitude, Double latitude, Integer limit) {
         if (limit == null) {
             limit = 1;
         }
+        if (limit > 7) {
+            limit = 7;
+        }
     }
 }

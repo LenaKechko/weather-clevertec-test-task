@@ -16,8 +16,7 @@ public class WeatherRepository implements IWeatherRepository {
 
     public Optional<YandexResponse> getWeather(Double longitude, Double latitude, Integer limit) {
         System.out.println("I am here!!");
-        System.out.println(response.getWeather(longitude, latitude, limit));
-//        weatherRepository.insert(weatherApiResponse);
-        return Optional.ofNullable(response.getWeather(longitude, latitude, limit));
+        System.out.println(response.getWeather(longitude, latitude));//, limit));
+        return Optional.ofNullable(response.getWeather(longitude, latitude));//, limit));
     }
 }

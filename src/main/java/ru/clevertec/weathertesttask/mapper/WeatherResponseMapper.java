@@ -8,7 +8,7 @@ import ru.clevertec.weathertesttask.entity.WeatherResponse;
 @Mapper(componentModel = "spring")
 public interface WeatherResponseMapper {
 
-    @Mapping(target = "id", expression ="java(java.util.UUID.randomUUID())")
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     WeatherResponse toWeatherResponse(WeatherResponseDto responseDto);
 
     WeatherResponseDto fromWeatherResponse(WeatherResponse response);

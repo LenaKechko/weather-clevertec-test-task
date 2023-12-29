@@ -1,21 +1,16 @@
 package ru.clevertec.weathertesttask.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.web.JsonPath;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-//@JsonProperty("geo_object[locality[name]]") nameLocation,
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 
-public record YandexResponse(@JsonPath("$.geo_object.locality.name") String nameLocation,
-                             @JsonProperty("now_dt") LocalDateTime date,
+public record YandexResponse(@JsonProperty("now") Long now,
+        @JsonProperty("now_dt") ZonedDateTime date,
                              @JsonProperty("fact") FactModel model,
-                             @JsonProperty("$.fact.temp") String[] modelTemp) {
-
-    public record LocationModel(@JsonProperty("$..locality.name") String nameCity) {
-    }
+                             @JsonProperty("info") InfoModel info) {
 
     public record FactModel(
             @JsonProperty("temp") Double temperature,
@@ -25,6 +20,13 @@ public record YandexResponse(@JsonPath("$.geo_object.locality.name") String name
             @JsonProperty("wind_gust") Double windGust,
             @JsonProperty("wind_dir") String windDir,
             @JsonProperty("pressure_mm") Integer pressureInMm) {
+    }
+
+    public record InfoModel(@JsonProperty("tzinfo") TZInfoModel tzInfo) {
+    }
+
+    public record TZInfoModel(@JsonProperty("name") ZoneId nameTimeZone,
+                              @JsonProperty("abbr") ZoneOffset countTimeZone) {
     }
 }
 

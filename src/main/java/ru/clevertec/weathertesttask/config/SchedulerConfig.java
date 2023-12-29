@@ -11,12 +11,6 @@ public class SchedulerConfig {
     @Bean
     public TaskScheduler taskScheduler() {
         return new ThreadPoolTaskScheduler();
-//        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-//        scheduler.setPoolSize(5);
-//        scheduler.setThreadNamePrefix("MyTaskScheduler-");
-//        scheduler.setWaitForTasksToCompleteOnShutdown(true);
-//        return scheduler;
-
     }
 }
 
