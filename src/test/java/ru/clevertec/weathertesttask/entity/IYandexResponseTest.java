@@ -1,32 +1,5 @@
 package ru.clevertec.weathertesttask.entity;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.clevertec.weathertesttask.config.WeatherMock;
-import ru.clevertec.weathertesttask.config.WireMockConfig;
-import ru.clevertec.weathertesttask.constant.Location;
-import ru.clevertec.weathertesttask.data.DayWeatherModelTestData;
-import ru.clevertec.weathertesttask.data.ForecastModelTestData;
-import ru.clevertec.weathertesttask.data.InfoModelTestData;
-import ru.clevertec.weathertesttask.data.WeatherModelTestData;
-import ru.clevertec.weathertesttask.entity.model.DayWeatherModel;
-import ru.clevertec.weathertesttask.entity.model.ForecastModel;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 //@SpringBootTest
 //@ActiveProfiles("test")
 //@EnableConfigurationProperties
