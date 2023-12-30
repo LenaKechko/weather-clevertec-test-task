@@ -20,3 +20,15 @@ spring:
         config:
           weather:
             url: https://api.weather.yandex.ru/v2/forecast
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
