@@ -2,6 +2,7 @@ package ru.clevertec.weathertesttask.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * Модель прогноза погоды на текущий день
@@ -15,6 +16,7 @@ import lombok.Builder;
  * @param pressureInMm     давление в (мм.рт.ст.)
  */
 @Builder
+@FieldNameConstants
 public record WeatherModel(
         @JsonProperty("temp") Double temperature,
         @JsonProperty("feels_like") Double feelsTemperature,

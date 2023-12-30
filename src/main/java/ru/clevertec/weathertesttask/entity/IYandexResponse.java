@@ -1,16 +1,15 @@
-package ru.clevertec.weathertesttask.model;
+package ru.clevertec.weathertesttask.entity;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.clevertec.weathertesttask.config.FeignConfig;
-import ru.clevertec.weathertesttask.entity.YandexResponse;
 
 /**
  * Интерфейс для подключения и отравки запроса внешнесу сервису
  * В аннотации @FeignClient выполняются настройки подключения
  */
-@FeignClient(name = "weather", configuration = FeignConfig.class, url = "https://api.weather.yandex.ru/v2/forecast")
+@FeignClient(name = "weather", configuration = FeignConfig.class)
 public interface IYandexResponse {
 
     /**

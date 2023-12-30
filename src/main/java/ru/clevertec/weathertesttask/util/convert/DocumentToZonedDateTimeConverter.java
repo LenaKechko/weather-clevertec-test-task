@@ -1,4 +1,4 @@
-package ru.clevertec.weathertesttask.config.mongo;
+package ru.clevertec.weathertesttask.util.convert;
 
 
 import org.bson.Document;
@@ -10,9 +10,6 @@ import org.springframework.stereotype.Component;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-
-import static ru.clevertec.weathertesttask.config.mongo.ZonedDateTimeToDocumentConverter.DATE_TIME;
-import static ru.clevertec.weathertesttask.config.mongo.ZonedDateTimeToDocumentConverter.ZONE;
 
 /**
  * Класс для настройки конвертирования данных из БД в объект ZonedDateTime
@@ -31,8 +28,8 @@ public class DocumentToZonedDateTimeConverter implements Converter<Document, Zon
     public ZonedDateTime convert(@Nullable Document document) {
         if (document == null) return null;
 
-        Date dateTime = document.getDate(DATE_TIME);
-        String zoneId = document.getString(ZONE);
+        Date dateTime = document.getDate(ZonedDateTimeToDocumentConverter.DATE_TIME);
+        String zoneId = document.getString(ZonedDateTimeToDocumentConverter.ZONE);
         ZoneId zone = ZoneId.of(zoneId);
 
         return ZonedDateTime.ofInstant(dateTime.toInstant(), zone);

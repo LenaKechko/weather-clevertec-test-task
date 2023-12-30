@@ -1,4 +1,4 @@
-package ru.clevertec.weathertesttask.config.mongo;
+package ru.clevertec.weathertesttask.util.convert;
 
 import org.bson.Document;
 import org.springframework.core.convert.converter.Converter;

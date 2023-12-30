@@ -1,5 +1,6 @@
 package ru.clevertec.weathertesttask.dto;
 
+import lombok.experimental.FieldNameConstants;
 import ru.clevertec.weathertesttask.entity.model.DayWeatherModel;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.Map;
  * @param date          дата
  * @param forecastOfDay погода в разные периоды времени дня
  */
+@FieldNameConstants
 public record ForecastWeatherResponseDto(LocalDate date,
                                          Map<String, DayWeatherModel> forecastOfDay) {
 }

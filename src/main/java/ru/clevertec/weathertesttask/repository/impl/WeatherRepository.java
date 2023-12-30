@@ -2,7 +2,7 @@ package ru.clevertec.weathertesttask.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.clevertec.weathertesttask.model.IYandexResponse;
+import ru.clevertec.weathertesttask.entity.IYandexResponse;
 import ru.clevertec.weathertesttask.entity.YandexResponse;
 import ru.clevertec.weathertesttask.repository.IWeatherRepository;
 

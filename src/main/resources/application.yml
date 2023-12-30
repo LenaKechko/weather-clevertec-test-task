@@ -14,3 +14,9 @@ spring:
       host: localhost
       database: weather_database
       port: 27017
+  cloud:
+    openfeign:
+      client:
+        config:
+          weather:
+            url: https://api.weather.yandex.ru/v2/forecast

@@ -1,6 +1,7 @@
 package ru.clevertec.weathertesttask.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * Модель для погоды в разные временные промежутки дня
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param pressureInMm     давление (мм.рт.ст.)
  * @param condition        погодные условия
  */
+@FieldNameConstants
 public record DayWeatherModel(
         @JsonProperty("temp_min") Double minTemperature,
         @JsonProperty("temp_avg") Double avgTemperature,
