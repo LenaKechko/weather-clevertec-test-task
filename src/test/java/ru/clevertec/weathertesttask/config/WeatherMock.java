@@ -1,6 +1,6 @@
 package ru.clevertec.weathertesttask.config;
 
-public class WeatherMock {
+//public class WeatherMock {
 
 //    public static void setupMockWeatherResponse(WireMockServer mockService) throws IOException {
 //        mockService.stubFor(WireMock.get(WireMock.urlEqualTo("?lat=30.9754&lon=52.4345"))
@@ -12,4 +12,4 @@ public class WeatherMock {
 //                                        WeatherMock.class.getClassLoader().getResourceAsStream("get-weather-response.json"),
 //                                        Charset.defaultCharset()))));
 //    }
-}
+//}

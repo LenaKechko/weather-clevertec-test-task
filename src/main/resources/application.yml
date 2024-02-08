@@ -1,5 +1,5 @@
 yandex:
-  key: d86f2e3f-e85a-4abd-9d86-3cb87c3d159d
+  key: 80ac0d6d-c3bb-4b47-ae3f-7302308f1173
 
 server:
   port: 8080
@@ -11,7 +11,7 @@ logging:
 spring:
   data:
     mongodb:
-      host: localhost
+      host: mongo_db
       database: weather_database
       port: 27017
   cloud:
@@ -20,6 +20,7 @@ spring:
         config:
           weather:
             url: https://api.weather.yandex.ru/v2/forecast
+
 management:
   endpoints:
     web:
@@ -28,7 +29,7 @@ management:
   metrics:
     export:
       prometheus:
-        enabled: true
+        enabled:true
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true

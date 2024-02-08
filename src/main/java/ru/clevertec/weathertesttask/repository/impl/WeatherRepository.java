@@ -1,5 +1,6 @@
 package ru.clevertec.weathertesttask.repository.impl;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.clevertec.weathertesttask.entity.IYandexResponse;
@@ -31,6 +32,7 @@ public class WeatherRepository implements IWeatherRepository {
      * @param limit     количество дней, если необходимо
      * @return Optional<YandexResponse> для дальнейшей обработки ошибочных данных
      */
+    @Timed("gettingWeather")
     public Optional<YandexResponse> getWeather(Double longitude, Double latitude, Integer limit) {
         return Optional.ofNullable(response.getWeather(longitude, latitude, limit));
     }
