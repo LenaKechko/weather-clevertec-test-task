@@ -2,23 +2,23 @@ version: "3.8"
 services:
   mongo_db:
     image: mongo:latest
-    container_name: "mongo_db"
     ports:
       - 27017:27017
   weather-app:
-    depends_on:
-      - mongo_db
     build: ./
     image: weather-app:latest
     container_name: "weather-app"
     ports:
       - 8080:8080
   grafana:
-    build: './config/grafana'
+    image: grafana/grafana
+    depends_on:
+      - prometheus
     ports:
       - 3000:3000
     volumes:
       - ./grafana:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin

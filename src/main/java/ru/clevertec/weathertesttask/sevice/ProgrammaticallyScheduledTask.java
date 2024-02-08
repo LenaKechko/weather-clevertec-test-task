@@ -1,5 +1,7 @@
 package ru.clevertec.weathertesttask.sevice;
 
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,7 @@ import ru.clevertec.weathertesttask.mapper.WeatherResponseMapper;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Класс реализующий задачу: делать запрос о погоде каждые 10 минут
@@ -38,22 +41,31 @@ public class ProgrammaticallyScheduledTask {
     private final IWeatherDBRepository repository;
 
     /**
+     * Переменная для метрики
+     */
+    private final AtomicInteger temperature;
+
+    /**
      * Конструктор класса. Запускает задачу на выполнение
      *
      * @param taskScheduler объект для программирования задач по расписанию
      * @param service       объект слоя сервис
      * @param mapper        объект слоя маппер
      * @param repository    объект слоя репозиторий
+     * @param meterRegistry объект для регистрации метрики для prometheus
      */
     @Autowired
     public ProgrammaticallyScheduledTask(TaskScheduler taskScheduler,
                                          WeatherService service,
                                          WeatherResponseMapper mapper,
-                                         IWeatherDBRepository repository) {
+                                         IWeatherDBRepository repository,
+                                         MeterRegistry meterRegistry) {
         this.taskScheduler = taskScheduler;
         this.service = service;
         this.mapper = mapper;
         this.repository = repository;
+        temperature = new AtomicInteger();
+        meterRegistry.gauge("temperatureScheduler", temperature);
         scheduleTask();
     }
 
@@ -61,11 +73,14 @@ public class ProgrammaticallyScheduledTask {
      * Метод выполняет запрос к внешнему api,
      * преобразует объект и записывает его в БД MongoDB.
      * Действие запускается каждые 10 минут
+     * Аннотация @Timed указана для метрики
      */
+    @Timed("schedulerTaskMetrics")
     public void scheduleTask() {
         Runnable task = () -> {
             WeatherResponseDto responseDto = service.getWeather(new WeatherRequest(null, null, null));
             WeatherResponse response = mapper.toWeatherResponse(responseDto);
+            temperature.set(response.getModel().temperature().intValue());
             repository.insert(response);
         };
         taskScheduler.scheduleWithFixedDelay(task, Duration.ofMinutes(10));
