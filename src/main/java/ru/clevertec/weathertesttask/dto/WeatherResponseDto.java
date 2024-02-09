@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 /**
  * Объект, в который преобразуются данные от внешнего api
  *
- * @param date  вемя запроса погоды
+ * @param date  время запроса погоды
  * @param model модель текущей погоды
  */
 @FieldNameConstants

@@ -1,16 +1,23 @@
 package ru.clevertec.weathertesttask.data;
 
-import lombok.experimental.UtilityClass;
+import lombok.Builder;
+import lombok.Getter;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
 
-@UtilityClass
+@Getter
+@Builder(setterPrefix = "with", toBuilder = true)
 public class WeatherRequestTestData {
 
-    private final Double longitude = 52.4345;
-    private final Double latitude = 30.9754;
-    private final Integer limit = 1;
+    @Builder.Default
+    private Double longitude = 52.4345;
 
-    public static WeatherRequest buildWeatherRequest() {
+    @Builder.Default
+    private Double latitude = 30.9754;
+
+    @Builder.Default
+    private Integer limit = 1;
+
+    public WeatherRequest buildWeatherRequest() {
         return new WeatherRequest(longitude, latitude, limit);
     }
 

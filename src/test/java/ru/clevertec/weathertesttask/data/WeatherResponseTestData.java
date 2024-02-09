@@ -9,7 +9,9 @@ import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Builder(setterPrefix = "with", toBuilder = true)
 public class WeatherResponseTestData {
@@ -32,4 +34,11 @@ public class WeatherResponseTestData {
     public WeatherResponseDto buildWeatherDto() {
         return new WeatherResponseDto(date, model);
     }
+
+    public List<WeatherResponseDto> buildListWeatherDto(int count) {
+        return IntStream.range(0, count)
+                .mapToObj((value) -> buildWeatherDto())
+                .toList();
+    }
+
 }
