@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RestClientTest(IYandexResponse.class)
 @AutoConfigureWebClient(registerRestTemplate = true)
 @RequiredArgsConstructor
+        /*передать не корректные данные и посмотреть чтобы вернулся exception
+         * FeignServerException*/
 class IYandexResponseTest {
 
     @Autowired
@@ -46,6 +48,5 @@ class IYandexResponseTest {
 
     }
 
-    /*передать не корректные данные и посмотреть чтобы вернулся exception
-    * FeignServerException*/
+
 }
