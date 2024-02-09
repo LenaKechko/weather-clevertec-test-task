@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'com.github.tomakehurst:wiremock'
+    testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.3.1'
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
