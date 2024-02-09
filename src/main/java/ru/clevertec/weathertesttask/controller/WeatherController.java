@@ -86,7 +86,7 @@ public class WeatherController {
         try {
             return ResponseEntity.ok(weatherService.getWeather(request));
         } catch (IncorrectDataOfWeather e) {
-            return ResponseEntity.notFound().header(e.getMessage()).build();
+            return ResponseEntity.notFound().header("Error message", e.getMessage()).build();
         }
     }
 

@@ -7,23 +7,23 @@ import ru.clevertec.weathertesttask.entity.model.DayWeatherModel;
 public class DayWeatherModelTestData {
 
     @Builder.Default
-    private Double minTemperature = -1.0;
+    private Double minTemperature = Constants.MIN_TEMPERATURE;
     @Builder.Default
-    Double avgTemperature = 0.0;
+    Double avgTemperature = Constants.AVG_TEMPERATURE;
     @Builder.Default
-    Double maxTemperature = 1.0;
+    Double maxTemperature = Constants.MAX_TEMPERATURE;
     @Builder.Default
-    Double feelsTemperature = 0.0;
+    Double feelsTemperature = Constants.FEELS_TEMPERATURE;
     @Builder.Default
-    Double windSpeed = 5.1;
+    Double windSpeed = Constants.WIND_SPEED;
     @Builder.Default
-    Double windGust = 3.0;
+    Double windGust = Constants.WIND_GUST;
     @Builder.Default
-    String windDir = "Some direction";
+    String windDir = Constants.WIND_DIR;
     @Builder.Default
-    Integer pressureInMm = 733;
+    Integer pressureInMm = Constants.PRESSURE_IN_MM;
     @Builder.Default
-    String condition = "Some condition";
+    String condition = Constants.CONDITION;
 
     public DayWeatherModel buildDayWeatherModel() {
         return new DayWeatherModel(minTemperature,

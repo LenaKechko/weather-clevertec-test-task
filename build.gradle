@@ -41,6 +41,8 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.google.code.gson:gson'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.3.1'

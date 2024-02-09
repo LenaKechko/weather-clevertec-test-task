@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 public class ForecastModelTestData {
 
     @Builder.Default
-    private LocalDate date = LocalDate.MAX;
+    private LocalDate date = Constants.DATE;
 
     @Builder.Default
     private ForecastModel.PartOfDay partOfDayList = new ForecastModel.PartOfDay(

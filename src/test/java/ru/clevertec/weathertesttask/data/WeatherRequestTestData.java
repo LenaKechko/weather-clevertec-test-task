@@ -9,13 +9,13 @@ import ru.clevertec.weathertesttask.model.WeatherRequest;
 public class WeatherRequestTestData {
 
     @Builder.Default
-    private Double longitude = 52.4345;
+    private Double longitude = Constants.LONGITUDE;
 
     @Builder.Default
-    private Double latitude = 30.9754;
+    private Double latitude = Constants.LATITUDE;
 
     @Builder.Default
-    private Integer limit = 1;
+    private Integer limit = Constants.LIMIT;
 
     public WeatherRequest buildWeatherRequest() {
         return new WeatherRequest(longitude, latitude, limit);

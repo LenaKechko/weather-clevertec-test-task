@@ -128,6 +128,8 @@ class WeatherControllerTest {
                 .withLatitude(100.0)
                 .withLongitude(100.0)
                 .build().buildWeatherRequest();
+        String expectedHeader = new IncorrectDataOfWeather(weatherRequest.longitude(), weatherRequest.latitude())
+                .getMessage();
 
         // when
         doThrow(IncorrectDataOfWeather.class)
@@ -138,6 +140,7 @@ class WeatherControllerTest {
                         .content(gson.toJson(weatherRequest))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
+//                .andExpect(header().string("Error message", expectedHeader))
                 .andDo(MockMvcResultHandlers.print());
     }
 }

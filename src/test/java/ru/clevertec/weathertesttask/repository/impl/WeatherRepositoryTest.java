@@ -29,7 +29,7 @@ class WeatherRepositoryTest {
     @Test
     void getWeatherShouldReturnResponse() {
         // given
-        WeatherRequest weatherRequest = WeatherRequestTestData.buildWeatherRequest();
+        WeatherRequest weatherRequest = WeatherRequestTestData.builder().build().buildWeatherRequest();
         YandexResponse expected = YandexResponseTestData.builder().build().buildYandexResponse();
 
         doReturn(expected)
