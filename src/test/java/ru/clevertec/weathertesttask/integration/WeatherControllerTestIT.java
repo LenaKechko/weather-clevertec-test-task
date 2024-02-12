@@ -17,19 +17,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.clevertec.weathertesttask.config.LocalDateTypeAdapter;
 import ru.clevertec.weathertesttask.config.MongoContainerInitializer;
 import ru.clevertec.weathertesttask.config.ZonedDateTimeTypeAdapter;
-import ru.clevertec.weathertesttask.data.Constants;
-import ru.clevertec.weathertesttask.data.WeatherRequestTestData;
-import ru.clevertec.weathertesttask.data.WeatherResponseTestData;
-import ru.clevertec.weathertesttask.data.YandexResponseTestData;
+import ru.clevertec.weathertesttask.data.*;
+import ru.clevertec.weathertesttask.dto.ForecastWeatherResponseDto;
 import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 import ru.clevertec.weathertesttask.entity.YandexResponse;
+import ru.clevertec.weathertesttask.exception.IncorrectDataOfWeather;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
 import ru.clevertec.weathertesttask.sevice.impl.WeatherServiceImpl;
 import wiremock.org.eclipse.jetty.http.HttpHeader;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -49,10 +51,11 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
     @Autowired
     private WeatherServiceImpl weatherService;
 
-//    @Autowired
+    //    @Autowired
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+            .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
             .create();
 
     @Test
@@ -76,7 +79,8 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
                 .withQueryParam("limit", equalTo(Constants.LIMIT.toString()))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
-                        .withBodyFile("yandex-response-successful.json")
+//                        .withBodyFile("yandex-response-successful.json")
+                        .withBody(gson.toJson(yandexResponse))
                         .withStatus(HttpStatus.OK.value())
                 ));
 
@@ -92,10 +96,38 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
         assertThatCode(() -> weatherService.getWeather(weatherRequest))
                 .doesNotThrowAnyException();
     }
+//!!!
+    @SneakyThrows
+    @Test
+    void getWeatherShouldReturnForecastForSomeDaysInSomeCityWhenCorrectRequest() {
+        int countDays = 2;
+        WeatherRequest weatherRequest = WeatherRequestTestData.builder()
+                .withLimit(countDays)
+                .build().buildWeatherRequest();
+        List<ForecastWeatherResponseDto> forecastWeatherResponseDtoList = ForecastModelTestData.builder()
+                .build().buildListForecastWeatherResponseDto(countDays);
 
+        givenThat(get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(weatherRequest.longitude().toString()))
+                .withQueryParam("lat", equalTo(weatherRequest.latitude().toString()))
+                .withQueryParam("limit", equalTo(weatherRequest.limit().toString()))
+                .willReturn(aResponse()
+                                .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                                .withBodyFile("yandex-response-successful.json")
+//                        .withBody(gson.toJson(forecastWeatherResponseDtoList))
+                                .withStatus(HttpStatus.OK.value())
+                ));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/weather/days/{countDays}", countDays)
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    //!!!!!!
     @Test
     @SneakyThrows
-    void getWeatherShouldReturnWeatherResponseDtoWhenCorrectRequest() {
+    void getWeatherShouldReturnWeatherNowInSomeCityWhenCorrectRequest() {
         WeatherRequest weatherRequest = WeatherRequestTestData.builder().build().buildWeatherRequest();
         YandexResponse yandexResponse = YandexResponseTestData.builder().build().buildYandexResponse();
         WeatherResponseDto exceptedWeatherResponse = WeatherResponseTestData.builder().build().buildWeatherDto();
@@ -106,7 +138,8 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
                 .withQueryParam("limit", equalTo(weatherRequest.limit().toString()))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
-                        .withBody(gson.toJson(yandexResponse))
+                        .withBodyFile("yandex-response-successful.json")
+//                        .withBody(gson.toJson(yandexResponse))
                         .withStatus(HttpStatus.OK.value())
                 ));
 
@@ -124,5 +157,31 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
                 .doesNotThrowAnyException();
     }
 
+    @Test
+    @SneakyThrows
+    void getWeatherShouldReturnExceptionWhenIncorrectRequest() {
+        WeatherRequest weatherRequest = WeatherRequestTestData.builder()
+                .withLongitude(100.0)
+                .withLatitude(100.0)
+                .build().buildWeatherRequest();
+        String expectedHeader = new IncorrectDataOfWeather(weatherRequest.longitude(), weatherRequest.latitude())
+                .getMessage();
+
+        stubFor(get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(weatherRequest.longitude().toString()))
+                .withQueryParam("lat", equalTo(weatherRequest.latitude().toString()))
+                .withQueryParam("limit", equalTo(weatherRequest.limit().toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(HttpStatus.BAD_REQUEST.value())
+                ));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/weather/city")
+                        .content(gson.toJson(weatherRequest))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Error message", expectedHeader))
+                .andDo(MockMvcResultHandlers.print());
+    }
 
 }
