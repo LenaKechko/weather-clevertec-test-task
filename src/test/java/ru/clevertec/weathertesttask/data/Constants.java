@@ -26,5 +26,5 @@ public class Constants {
     public static final Double LONGITUDE = Location.GOMEL_LONGITUDE.getCoord();
     public static final Double LATITUDE = Location.GOMEL_LATITUDE.getCoord();
     public static final Integer LIMIT = 1;
-    public static final ZonedDateTime DATE_WITH_ZONED = ZonedDateTime.of(LocalDateTime.MIN, ZoneId.systemDefault());
+    public static final ZonedDateTime DATE_WITH_ZONED = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault());
 }

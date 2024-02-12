@@ -1,52 +1,63 @@
 package ru.clevertec.weathertesttask.entity;
 
-import lombok.RequiredArgsConstructor;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import feign.FeignException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
-import ru.clevertec.weathertesttask.data.WeatherRequestTestData;
-import ru.clevertec.weathertesttask.model.WeatherRequest;
+import org.springframework.test.context.ActiveProfiles;
+import ru.clevertec.weathertesttask.data.Constants;
+import wiremock.org.eclipse.jetty.http.HttpHeader;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
-@RestClientTest(IYandexResponse.class)
-@AutoConfigureWebClient(registerRestTemplate = true)
-@RequiredArgsConstructor
-        /*передать не корректные данные и посмотреть чтобы вернулся exception
-         * FeignServerException*/
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWireMock(port = 9561)
+@ActiveProfiles("test")
 class IYandexResponseTest {
 
     @Autowired
-    private final IYandexResponse iYandexResponse;
-
-    @Autowired
-    private MockRestServiceServer mockRestServiceServer;
+    private IYandexResponse iYandexResponse;
 
     @Test
     public void getWeatherShouldReturnJsonWithWeather() {
         // given
-        WeatherRequest weatherRequest = WeatherRequestTestData.builder().build().buildWeatherRequest();
-//        YandexResponse expectedYandexResponse = YandexResponseTestData.builder().build().buildYandexResponse();
-        this.mockRestServiceServer.expect(
-                        MockRestRequestMatchers.requestTo("https://api.weather.yandex.ru/v2/forecast"))
-                .andRespond(MockRestResponseCreators
-                        .withSuccess(new ClassPathResource("get-weather-response.json"),
-                                MediaType.APPLICATION_JSON));
+        WireMock.givenThat(WireMock.get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(Constants.LONGITUDE.toString()))
+                .withQueryParam("lat", equalTo(Constants.LATITUDE.toString()))
+                .withQueryParam("limit", equalTo(Constants.LIMIT.toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withBodyFile("yandex-response-successful.json")
+                        .withStatus(HttpStatus.OK.value())));
 
-        YandexResponse actualYandexResponse = iYandexResponse.getWeather(weatherRequest.longitude(),
-                weatherRequest.latitude(),
-                weatherRequest.limit());
+        // when
+        YandexResponse actualYandexResponse = iYandexResponse.getWeather(Constants.LONGITUDE, Constants.LATITUDE, Constants.LIMIT);
 
-
-        assertNotNull(actualYandexResponse);
-
+        // then
+        Assertions.assertNotNull(actualYandexResponse);
     }
 
+    @Test
+    public void getWeatherShouldReturnFeignServerException() {
+        // given
+        double longitude = -100.0;
+        double latitude = 100.0;
+        WireMock.givenThat(WireMock.get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(String.valueOf(longitude)))
+                .withQueryParam("lat", equalTo(String.valueOf(latitude)))
+                .withQueryParam("limit", equalTo(Constants.LIMIT.toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())));
 
+        // when - then
+        Assertions.assertThrows(FeignException.FeignServerException.class,
+                () -> iYandexResponse.getWeather(longitude, latitude, Constants.LIMIT));
+    }
 }

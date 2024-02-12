@@ -20,7 +20,7 @@ public interface IYandexResponse {
      * @param limit     количество дней
      * @return объект типа YandexResponse
      */
-    @GetMapping
+    @GetMapping("/")
     @Timed("gettingWeatherFromYandex")
     YandexResponse getWeather(
             @RequestParam(name = "lon") double longitude,

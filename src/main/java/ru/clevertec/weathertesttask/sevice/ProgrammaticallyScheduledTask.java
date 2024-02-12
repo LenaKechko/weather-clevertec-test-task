@@ -3,17 +3,17 @@ package ru.clevertec.weathertesttask.sevice;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import ru.clevertec.weathertesttask.constant.Location;
-import ru.clevertec.weathertesttask.repository.db.IWeatherDBRepository;
 import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 import ru.clevertec.weathertesttask.entity.WeatherResponse;
 import ru.clevertec.weathertesttask.mapper.WeatherResponseMapper;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
+import ru.clevertec.weathertesttask.repository.db.IWeatherDBRepository;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -87,6 +87,6 @@ public class ProgrammaticallyScheduledTask {
             temperature.set(response.getModel().temperature().intValue());
             repository.insert(response);
         };
-        taskScheduler.scheduleWithFixedDelay(task, Duration.ofMinutes(10));
+        taskScheduler.scheduleWithFixedDelay(task, Instant.ofEpochSecond(1000), Duration.ofMinutes(10));
     }
 }

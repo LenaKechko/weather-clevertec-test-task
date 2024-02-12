@@ -1,5 +1,6 @@
 package ru.clevertec.weathertesttask.repository.impl;
 
+import feign.FeignException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,8 +15,7 @@ import ru.clevertec.weathertesttask.model.WeatherRequest;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WeatherRepositoryTest {
@@ -52,12 +52,21 @@ class WeatherRepositoryTest {
     @Test
     void getWeatherShouldNotReturnResponse() {
         // given
+        WeatherRequest weatherRequest = WeatherRequestTestData.builder()
+                .withLatitude(-100.0)
+                .build().buildWeatherRequest();
+
+        doThrow(FeignException.FeignClientException.class)
+                .when(yandexResponse).getWeather(weatherRequest.longitude(),
+                        weatherRequest.latitude(),
+                        weatherRequest.limit());
 
         // when
-        Optional<YandexResponse> actual = weatherRepository.getWeather(0.0, 0.0, 0);
+        Optional<YandexResponse> actual = weatherRepository.getWeather(weatherRequest.longitude(),
+                weatherRequest.latitude(),
+                weatherRequest.limit());
 
         // then
         assertEquals(Optional.empty(), actual);
-        verify(yandexResponse).getWeather(0.0, 0.0, 0);
     }
 }
