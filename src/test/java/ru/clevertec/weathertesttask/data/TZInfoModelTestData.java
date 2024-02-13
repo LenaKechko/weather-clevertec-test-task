@@ -10,9 +10,9 @@ import java.time.ZoneOffset;
 public class TZInfoModelTestData {
 
     @Builder.Default
-    private ZoneId nameTimeZone = ZoneId.of("Asia/Tehran");
+    private ZoneId nameTimeZone = Constants.NAME_TIME_ZONE;
     @Builder.Default
-    private ZoneOffset countTimeZone = ZoneOffset.of("+0330");
+    private ZoneOffset countTimeZone = Constants.COUNT_TIME_ZONE;
 
     public TZInfoModel buildTZInfoModel() {
         return new TZInfoModel(nameTimeZone, countTimeZone);

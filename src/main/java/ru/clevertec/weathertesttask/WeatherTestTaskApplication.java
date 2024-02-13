@@ -13,8 +13,8 @@ import ru.clevertec.weathertesttask.config.YandexConfig;
  * Аннотаия @EnableConfigurationProperties подключает файл конфигурации с Яндекс.Погода
  */
 
-@SpringBootApplication
 @EnableFeignClients
+@SpringBootApplication
 @EnableConfigurationProperties(YandexConfig.class)
 public class WeatherTestTaskApplication {
 

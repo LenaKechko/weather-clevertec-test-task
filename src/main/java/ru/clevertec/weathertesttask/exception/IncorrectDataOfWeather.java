@@ -12,6 +12,6 @@ public class IncorrectDataOfWeather extends RuntimeException {
      * @param latitude  координата широты
      */
     public IncorrectDataOfWeather(Double longitude, Double latitude) {
-        super("Incorrect longitude = " + longitude + "or latitude = " + latitude);
+        super("Incorrect longitude = " + longitude + " or latitude = " + latitude);
     }
 }

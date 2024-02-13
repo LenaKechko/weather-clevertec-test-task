@@ -1,0 +1,118 @@
+{
+  "now_dt": "2023-12-29T15:27:42.715478Z",
+  "info": {
+    "tzinfo": {
+      "name": "Asia/Tehran",
+      "abbr": "+0330"
+    }
+  },
+  "fact": {
+    "temp": 4,
+    "feels_like": 0,
+    "condition": "cloudy",
+    "wind_speed": 2.6,
+    "wind_dir": "ne",
+    "pressure_mm": 567,
+    "wind_gust": 4.3
+  },
+  "forecasts": [
+    {
+      "date": "2023-12-29",
+      "parts": {
+        "day": {
+          "temp_min": 5,
+          "temp_avg": 8,
+          "temp_max": 9,
+          "wind_speed": 3.8,
+          "wind_gust": 7.1,
+          "wind_dir": "ne",
+          "pressure_mm": 568,
+          "condition": "cloudy",
+          "feels_like": 4
+        },
+        "night": {
+          "temp_min": 2,
+          "temp_avg": 3,
+          "temp_max": 4,
+          "wind_speed": 3.4,
+          "wind_gust": 4.5,
+          "wind_dir": "sw",
+          "pressure_mm": 567,
+          "condition": "overcast",
+          "feels_like": -1
+        },
+        "morning": {
+          "temp_min": 1,
+          "temp_avg": 4,
+          "temp_max": 7,
+          "wind_speed": 2.9,
+          "wind_gust": 5.6,
+          "wind_dir": "nw",
+          "pressure_mm": 569,
+          "condition": "cloudy",
+          "feels_like": 1
+        },
+        "evening": {
+          "temp_min": 4,
+          "temp_avg": 4,
+          "temp_max": 5,
+          "wind_speed": 2.8,
+          "wind_gust": 4.3,
+          "wind_dir": "ne",
+          "pressure_mm": 567,
+          "condition": "cloudy",
+          "feels_like": 0
+        }
+      }
+    },
+    {
+      "date": "2023-12-30",
+      "parts": {
+        "night": {
+          "temp_min": 0,
+          "temp_avg": 1,
+          "temp_max": 3,
+          "wind_speed": 2.3,
+          "wind_gust": 3.4,
+          "wind_dir": "e",
+          "pressure_mm": 568,
+          "condition": "clear",
+          "feels_like": -3
+        },
+        "evening": {
+          "temp_min": 4,
+          "temp_avg": 5,
+          "temp_max": 6,
+          "wind_speed": 2.5,
+          "wind_gust": 3.4,
+          "wind_dir": "e",
+          "pressure_mm": 576,
+          "condition": "cloudy",
+          "feels_like": 1
+        },
+        "morning": {
+          "temp_min": 0,
+          "temp_avg": 4,
+          "temp_max": 9,
+          "wind_speed": 2.8,
+          "wind_gust": 5.4,
+          "wind_dir": "e",
+          "pressure_mm": 568,
+          "condition": "clear",
+          "feels_like": 1
+        },
+        "day": {
+          "temp_min": 7,
+          "temp_avg": 9,
+          "temp_max": 10,
+          "wind_speed": 4.3,
+          "wind_gust": 8.4,
+          "wind_dir": "sw",
+          "pressure_mm": 575,
+          "condition": "cloudy",
+          "feels_like": 4
+        }
+      }
+    }
+  ]
+}

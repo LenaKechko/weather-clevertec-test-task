@@ -1,2 +1,12 @@
-weather:
-  url: http://localhost:8080
+spring:
+  data:
+    mongodb:
+      host: localhost
+      database: weather_database_test
+      port: 98098
+  cloud:
+    openfeign:
+      client:
+        config:
+          weather:
+            url: http://localhost:9561
