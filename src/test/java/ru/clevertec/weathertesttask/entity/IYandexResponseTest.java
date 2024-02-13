@@ -10,6 +10,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import ru.clevertec.weathertesttask.config.MongoContainerInitializer;
 import ru.clevertec.weathertesttask.data.Constants;
 import wiremock.org.eclipse.jetty.http.HttpHeader;
 
@@ -19,7 +20,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 9561)
 @ActiveProfiles("test")
-class IYandexResponseTest {
+class IYandexResponseTest extends MongoContainerInitializer {
 
     @Autowired
     private IYandexResponse iYandexResponse;

@@ -8,7 +8,7 @@ import java.time.*;
 
 public class Constants {
 
-    public static final LocalDate DATE = LocalDate.MAX;
+    public static final LocalDate DATE = LocalDate.now();
     public static final Double TEMPERATURE = 4.0;
     public static final Double MIN_TEMPERATURE = -1.0;
     public static final Double AVG_TEMPERATURE = 0.0;
@@ -26,5 +26,6 @@ public class Constants {
     public static final Double LONGITUDE = Location.GOMEL_LONGITUDE.getCoord();
     public static final Double LATITUDE = Location.GOMEL_LATITUDE.getCoord();
     public static final Integer LIMIT = 1;
-    public static final ZonedDateTime DATE_WITH_ZONED = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault());
+    public static final ZonedDateTime DATE_WITH_ZONED = ZonedDateTime.now();
+//            ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault());
 }

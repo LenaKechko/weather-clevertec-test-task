@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
  * @param model модель текущей погоды
  */
 @FieldNameConstants
-public record WeatherResponseDto(@JsonProperty("date") ZonedDateTime date,
-                                 @JsonProperty("now") WeatherModel model) {
+public record WeatherResponseDto(
+        @JsonProperty("date") ZonedDateTime date,
+        @JsonProperty("now") WeatherModel model) {
 }
