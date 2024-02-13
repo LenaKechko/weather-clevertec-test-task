@@ -87,6 +87,8 @@ public class ProgrammaticallyScheduledTask {
             temperature.set(response.getModel().temperature().intValue());
             repository.insert(response);
         };
-        taskScheduler.scheduleWithFixedDelay(task, Instant.ofEpochSecond(1000), Duration.ofMinutes(10));
+        taskScheduler.scheduleWithFixedDelay(task,
+                Instant.ofEpochSecond(1000),
+                Duration.ofMinutes(1));
     }
 }
