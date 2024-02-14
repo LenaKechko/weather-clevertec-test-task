@@ -98,11 +98,6 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
     @SneakyThrows
     @Test
     void getWeatherShouldReturnForecastForSomeDaysInSomeCityWhenCorrectRequest() {
-        int countDays = 2;
-        WeatherRequest weatherRequest = WeatherRequestTestData.builder()
-                .withLimit(countDays)
-                .build().buildWeatherRequest();
-
         String jsonString = FileUtils.readFileToString(new ClassPathResource("__files/yandex-response-successful.json").getFile(),
                 StandardCharsets.UTF_8);
         YandexResponse yandexResponse = objectMapper.readValue(jsonString, YandexResponse.class);
@@ -110,6 +105,12 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
         List<ForecastWeatherResponseDto> forecastWeatherResponseDtoList = yandexResponse.forecast().stream()
                 .map(ForecastModelMapper::toForecastWeatherResponseDto)
                 .toList();
+
+        int countDays = forecastWeatherResponseDtoList.size();
+
+        WeatherRequest weatherRequest = WeatherRequestTestData.builder()
+                .withLimit(countDays)
+                .build().buildWeatherRequest();
 
         givenThat(get(WireMock.urlPathEqualTo("/"))
                 .withQueryParam("lon", equalTo(weatherRequest.longitude().toString()))
@@ -124,8 +125,8 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/weather/days/{countDays}", countDays)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpectAll(status().isOk(),
-                        jsonPath("$.[:1].date").value(forecastWeatherResponseDtoList.get(0).date().toString()),
-                        jsonPath("$.[:2].date").value(forecastWeatherResponseDtoList.get(1).date().toString()))
+                        jsonPath("$.[0].date").value(forecastWeatherResponseDtoList.get(0).date().toString()),
+                        jsonPath("$.[1].date").value(forecastWeatherResponseDtoList.get(1).date().toString()))
                 .andDo(MockMvcResultHandlers.print());
     }
 

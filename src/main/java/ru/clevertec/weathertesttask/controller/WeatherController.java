@@ -54,7 +54,7 @@ public class WeatherController {
     @GetMapping("/days/{countDays}")
     public ResponseEntity<List<ForecastWeatherResponseDto>> getWeatherForSomeDaysInExactCity(@PathVariable Integer countDays) {
         if (countDays <= 0) {
-            return ResponseEntity.badRequest().header("Ошибка! Введите положительное число дней").build();
+            return ResponseEntity.badRequest().header("Error message", "Ошибка! Введите положительное число дней").build();
         } else {
             WeatherRequest request = new WeatherRequest(Location.GOMEL_LONGITUDE.getCoord(), Location.GOMEL_LATITUDE.getCoord(), countDays);
             return ResponseEntity.ok(weatherService.getForecastWeather(request));
