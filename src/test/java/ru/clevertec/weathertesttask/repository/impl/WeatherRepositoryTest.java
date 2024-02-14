@@ -9,18 +9,23 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.clevertec.weathertesttask.constant.Location;
 import ru.clevertec.weathertesttask.data.WeatherRequestTestData;
 import ru.clevertec.weathertesttask.data.YandexResponseTestData;
 import ru.clevertec.weathertesttask.entity.IYandexResponse;
 import ru.clevertec.weathertesttask.entity.YandexResponse;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class WeatherRepositoryTest {
@@ -143,5 +148,37 @@ class WeatherRepositoryTest {
 
         actualCorrectFuture.thenAccept(actual -> assertEquals(Optional.of(expectedCorrectResponse), actual));
         actualEmptyFuture.thenAccept(actual -> assertEquals(expectedEmptyResponse, actual));
+    }
+
+    @Test
+    void getWeathersShouldReturnForecastForSomeCityAndLondon() {
+        // given
+        WeatherRequest weatherRequestInSomeCity = WeatherRequestTestData.builder().build().buildWeatherRequest();
+        YandexResponse expectedResponseInSomeCity = YandexResponseTestData.builder().build().buildYandexResponse();
+
+        doReturn(expectedResponseInSomeCity)
+                .when(yandexResponse).getWeather(weatherRequestInSomeCity.longitude(),
+                        weatherRequestInSomeCity.latitude(),
+                        weatherRequestInSomeCity.limit());
+
+        WeatherRequest weatherRequestInLondon = WeatherRequestTestData.builder()
+                .withLatitude(Location.LONDON_LATITUDE.getCoord())
+                .withLongitude(Location.LONDON_LONGITUDE.getCoord())
+                .build().buildWeatherRequest();
+        YandexResponse expectedResponseInLondon = YandexResponseTestData.builder().build().buildYandexResponse();
+
+        doReturn(expectedResponseInLondon)
+                .when(yandexResponse).getWeather(weatherRequestInLondon.longitude(),
+                        weatherRequestInLondon.latitude(),
+                        weatherRequestInLondon.limit());
+
+        // when
+        List<YandexResponse> actualResult = weatherRepository.getWeathers(weatherRequestInSomeCity.longitude(),
+                weatherRequestInSomeCity.latitude(),
+                weatherRequestInSomeCity.limit());
+
+        // then
+        assertEquals(2, actualResult.size());
+
     }
 }

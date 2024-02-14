@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.clevertec.weathertesttask.config.MongoContainerInitializer;
+import ru.clevertec.weathertesttask.constant.Location;
 import ru.clevertec.weathertesttask.data.Constants;
 import ru.clevertec.weathertesttask.data.WeatherRequestTestData;
 import ru.clevertec.weathertesttask.dto.ForecastWeatherResponseDto;
@@ -35,11 +36,19 @@ import wiremock.org.eclipse.jetty.http.HttpHeader;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.IntStream;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers
 @AutoConfigureMockMvc
@@ -93,6 +102,69 @@ class WeatherControllerTestIT extends MongoContainerInitializer {
 
         assertThatCode(() -> weatherService.getWeather(weatherRequest))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    @SneakyThrows
+    void getWeatherShouldReturnForecastInExactCityAndLondon() {
+        WeatherRequest weatherRequestInSomeCity = WeatherRequestTestData.builder().build().buildWeatherRequest();
+
+        String jsonStringInGomel = FileUtils.readFileToString(new ClassPathResource("__files/yandex-weather-in-gomel.json").getFile(),
+                StandardCharsets.UTF_8);
+        YandexResponse expectedResponseInSomeCity = objectMapper.readValue(jsonStringInGomel, YandexResponse.class);
+
+        WeatherRequest weatherRequestInLondon = WeatherRequestTestData.builder()
+                .withLatitude(Location.LONDON_LATITUDE.getCoord())
+                .withLongitude(Location.LONDON_LONGITUDE.getCoord())
+                .build().buildWeatherRequest();
+
+        String jsonStringInLondon = FileUtils.readFileToString(new ClassPathResource("__files/yandex-weather-in-london.json").getFile(),
+                StandardCharsets.UTF_8);
+        YandexResponse expectedResponseInLondon = objectMapper.readValue(jsonStringInLondon, YandexResponse.class);
+
+        List<YandexResponse> expectedResponse = List.of(expectedResponseInSomeCity, expectedResponseInLondon);
+
+
+        List<WeatherResponseDto> exceptedWeatherResponse = expectedResponse.stream()
+                .map(YandexResponseMapper::toWeatherResponseDto)
+                .toList();
+
+        givenThat(get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(weatherRequestInSomeCity.longitude().toString()))
+                .withQueryParam("lat", equalTo(weatherRequestInSomeCity.latitude().toString()))
+                .withQueryParam("limit", equalTo(weatherRequestInSomeCity.limit().toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(jsonStringInGomel)
+                        .withStatus(HttpStatus.OK.value())
+                ));
+
+        givenThat(get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(weatherRequestInLondon.longitude().toString()))
+                .withQueryParam("lat", equalTo(weatherRequestInLondon.latitude().toString()))
+                .withQueryParam("limit", equalTo(weatherRequestInLondon.limit().toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(jsonStringInLondon)
+                        .withStatus(HttpStatus.OK.value())
+                ));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/weather/london")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpectAll(status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON_VALUE),
+                        jsonPath("$.length()").value(exceptedWeatherResponse.size()))
+                .andDo(MockMvcResultHandlers.print());
+
+        assertThatCode(() -> weatherService.getWeathers(weatherRequestInSomeCity))
+                .doesNotThrowAnyException();
+
+        List<WeatherResponseDto> actualWeatherResponse = weatherService.getWeathers(weatherRequestInSomeCity);
+
+        IntStream.range(0, actualWeatherResponse.size())
+                .forEach((i) ->
+                        assertThat(actualWeatherResponse.get(i)).isEqualTo(exceptedWeatherResponse.get(i))
+                );
     }
 
     @SneakyThrows
