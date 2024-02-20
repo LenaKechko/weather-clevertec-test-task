@@ -11,9 +11,10 @@ public enum Location {
     /**
      * Долгота и широта
      */
-    GOMEL_LONGITUDE(52.4345),
-    GOMEL_LATITUDE(30.9754);
-
+    GOMEL_LATITUDE(52.4345),
+    GOMEL_LONGITUDE(30.9754),
+    LONDON_LATITUDE(51.5085),
+    LONDON_LONGITUDE(-0.12574);
     /**
      * Поле для работы со значениями координат
      */

@@ -89,6 +89,6 @@ public class ProgrammaticallyScheduledTask {
         };
         taskScheduler.scheduleWithFixedDelay(task,
                 Instant.ofEpochSecond(1000),
-                Duration.ofMinutes(1));
+                Duration.ofMinutes(10));
     }
 }

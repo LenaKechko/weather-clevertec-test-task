@@ -1,0 +1,68 @@
+{
+  "now_dt": "2024-02-14T14:17:38.649921Z",
+  "info": {
+    "tzinfo": {
+      "name": "Europe/London"
+    }
+  },
+  "fact": {
+    "temp": 13,
+    "feels_like": 9,
+    "condition": "overcast",
+    "wind_speed": 5.8,
+    "wind_dir": "sw",
+    "pressure_mm": 757,
+    "wind_gust": 11.3
+  },
+  "forecasts": [
+    {
+      "date": "2024-02-14",
+      "parts": {
+        "morning": {
+          "temp_min": 12,
+          "temp_avg": 12,
+          "temp_max": 13,
+          "wind_speed": 5.7,
+          "wind_gust": 10.9,
+          "wind_dir": "sw",
+          "pressure_mm": 757,
+          "condition": "rain",
+          "feels_like": 8
+        },
+        "night": {
+          "temp_min": 11,
+          "temp_avg": 12,
+          "temp_max": 12,
+          "wind_speed": 5.2,
+          "wind_gust": 10.6,
+          "wind_dir": "sw",
+          "pressure_mm": 756,
+          "condition": "overcast",
+          "feels_like": 8
+        },
+        "day": {
+          "temp_min": 13,
+          "temp_avg": 13,
+          "temp_max": 13,
+          "wind_speed": 6.5,
+          "wind_gust": 11.6,
+          "wind_dir": "sw",
+          "pressure_mm": 757,
+          "condition": "overcast",
+          "feels_like": 9
+        },
+        "evening": {
+          "temp_min": 12,
+          "temp_avg": 12,
+          "temp_max": 13,
+          "wind_speed": 4.9,
+          "wind_gust": 10.1,
+          "wind_dir": "sw",
+          "pressure_mm": 758,
+          "condition": "overcast",
+          "feels_like": 9
+        }
+      }
+    }
+  ]
+}

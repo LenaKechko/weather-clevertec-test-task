@@ -14,5 +14,7 @@ public interface WeatherService {
 
     WeatherResponseDto getWeather(WeatherRequest request);
 
+    List<WeatherResponseDto> getWeathers(WeatherRequest request);
+
     List<ForecastWeatherResponseDto> getForecastWeather(WeatherRequest request);
 }

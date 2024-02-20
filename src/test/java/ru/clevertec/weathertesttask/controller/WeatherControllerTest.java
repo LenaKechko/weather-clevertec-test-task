@@ -27,7 +27,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WeatherController.class)
 @AutoConfigureMockMvc
@@ -61,6 +63,28 @@ class WeatherControllerTest {
                         jsonPath("$.now.temp").value(weatherResponseDto.model().temperature()),
                         jsonPath("$.now.condition").value(weatherResponseDto.model().condition()),
                         jsonPath("$.now.feels_like").value(weatherResponseDto.model().feelsTemperature()))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @SneakyThrows
+    void getWeatherInExactCityShouldReturnWeatherNowInExactCityAndLondon() {
+        // given
+        WeatherRequest weatherRequest = WeatherRequestTestData.builder().build().buildWeatherRequest();
+        WeatherResponseDto weatherResponseDto = WeatherResponseTestData.builder()
+                .build().buildWeatherDto();
+
+        List<WeatherResponseDto> expected = List.of(weatherResponseDto, weatherResponseDto);
+
+        doReturn(expected)
+                .when(weatherService).getWeathers(weatherRequest);
+
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/weather/london")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpectAll(status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON_VALUE),
+                        jsonPath("$.length()").value(expected.size()))
                 .andDo(MockMvcResultHandlers.print());
     }
 

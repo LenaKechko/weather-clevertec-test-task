@@ -42,6 +42,16 @@ public class WeatherController {
         return getWeather(request);
     }
 
+    @GetMapping("/london")
+    public ResponseEntity<List<WeatherResponseDto>> getWeatherInExactCityAndInLondon() {
+        WeatherRequest request = new WeatherRequest(Location.GOMEL_LONGITUDE.getCoord(), Location.GOMEL_LATITUDE.getCoord(), 1);
+        try {
+            return ResponseEntity.ok(weatherService.getWeathers(request));
+        } catch (IncorrectDataOfWeather e) {
+            return ResponseEntity.notFound().header("Error message", e.getMessage()).build();
+        }
+    }
+
     /**
      * Метод обрабатывающий Rest-запросы с префиксом /api/weather/days/{количество}.
      * Возвращает погоду на указанное в запросе количество дней в городе Гомель.
@@ -54,7 +64,7 @@ public class WeatherController {
     @GetMapping("/days/{countDays}")
     public ResponseEntity<List<ForecastWeatherResponseDto>> getWeatherForSomeDaysInExactCity(@PathVariable Integer countDays) {
         if (countDays <= 0) {
-            return ResponseEntity.badRequest().header("Ошибка! Введите положительное число дней").build();
+            return ResponseEntity.badRequest().header("Error message", "Ошибка! Введите положительное число дней").build();
         } else {
             WeatherRequest request = new WeatherRequest(Location.GOMEL_LONGITUDE.getCoord(), Location.GOMEL_LATITUDE.getCoord(), countDays);
             return ResponseEntity.ok(weatherService.getForecastWeather(request));
