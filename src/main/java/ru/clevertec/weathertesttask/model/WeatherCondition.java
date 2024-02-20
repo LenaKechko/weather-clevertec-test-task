@@ -20,7 +20,7 @@ public enum WeatherCondition {
     HEAVY_RAIN("сильный дождь"),
     SHOWERS("ливень"),
     WET_SNOW("дождь со снегом"),
-    LIGHT_SHOW("небольшой снег"),
+    LIGHT_SNOW("небольшой снег"),
     SNOW("снег"),
     SNOW_SHOWERS("снегопад"),
     HAIL("град"),

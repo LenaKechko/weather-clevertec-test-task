@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.clevertec.weathertesttask.constant.Location;
 import ru.clevertec.weathertesttask.data.ForecastModelTestData;
 import ru.clevertec.weathertesttask.data.WeatherRequestTestData;
 import ru.clevertec.weathertesttask.data.WeatherResponseTestData;
@@ -17,6 +18,7 @@ import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 import ru.clevertec.weathertesttask.entity.YandexResponse;
 import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 import ru.clevertec.weathertesttask.exception.IncorrectDataOfWeather;
+import ru.clevertec.weathertesttask.mapper.YandexResponseMapper;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
 import ru.clevertec.weathertesttask.repository.impl.WeatherRepository;
 
@@ -165,5 +167,56 @@ class WeatherServiceImplTest {
                 getWeather(weatherRequest.longitude(),
                         weatherRequest.latitude(),
                         weatherRequest.limit());
+    }
+
+    @Test
+    void getWeathersShouldReturnWeatherInTwoCities() {
+        // given
+        WeatherRequest weatherRequestInSomeCity = WeatherRequestTestData.builder().build().buildWeatherRequest();
+        YandexResponse expectedResponseInSomeCity = YandexResponseTestData.builder().build().buildYandexResponse();
+
+        WeatherRequest weatherRequestInLondon = WeatherRequestTestData.builder()
+                .withLatitude(Location.LONDON_LATITUDE.getCoord())
+                .withLongitude(Location.LONDON_LONGITUDE.getCoord())
+                .build().buildWeatherRequest();
+        YandexResponse expectedResponseInLondon = YandexResponseTestData.builder().build().buildYandexResponse();
+
+        List<YandexResponse> expectedForecast = List.of(expectedResponseInSomeCity, expectedResponseInLondon);
+        List<WeatherResponseDto> exceptedWeatherResponse = expectedForecast.stream()
+                .map(YandexResponseMapper::toWeatherResponseDto)
+                .toList();
+
+        doReturn(expectedForecast)
+                .when(weatherRepository).getWeathers(
+                        weatherRequestInSomeCity.longitude(),
+                        weatherRequestInSomeCity.latitude(),
+                        weatherRequestInSomeCity.limit()
+                );
+
+        // when
+        List<WeatherResponseDto> actualWeatherResponse = weatherService.getWeathers(weatherRequestInSomeCity);
+
+        // then
+        assertEquals(exceptedWeatherResponse, actualWeatherResponse);
+        assertEquals(2, actualWeatherResponse.size());
+
+        IntStream.range(0, actualWeatherResponse.size())
+                .forEach((i) ->
+                        assertThat(actualWeatherResponse.get(i))
+                                .hasFieldOrPropertyWithValue(WeatherResponseDto.Fields.date, exceptedWeatherResponse.get(i).date()));
+        IntStream.range(0, actualWeatherResponse.size())
+                .forEach((i) ->
+                        assertThat(actualWeatherResponse.get(i).model())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.temperature, exceptedWeatherResponse.get(i).model().temperature())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.feelsTemperature, exceptedWeatherResponse.get(i).model().feelsTemperature())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.condition, exceptedWeatherResponse.get(i).model().condition())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.windSpeed, exceptedWeatherResponse.get(i).model().windSpeed())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.windGust, exceptedWeatherResponse.get(i).model().windGust())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.windDir, exceptedWeatherResponse.get(i).model().windDir())
+                                .hasFieldOrPropertyWithValue(WeatherModel.Fields.pressureInMm, exceptedWeatherResponse.get(i).model().pressureInMm()));
+
+        verify(weatherRepository).getWeathers(weatherRequestInSomeCity.longitude(),
+                weatherRequestInSomeCity.latitude(),
+                weatherRequestInSomeCity.limit());
     }
 }

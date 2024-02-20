@@ -14,6 +14,7 @@ import ru.clevertec.weathertesttask.sevice.WeatherService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс отвечающий за слой сервиса
@@ -42,6 +43,13 @@ public class WeatherServiceImpl implements WeatherService {
         return weatherRepository.getWeather(request.longitude(), request.latitude(), request.limit())
                 .map(YandexResponseMapper::toWeatherResponseDto)
                 .orElseThrow(() -> new IncorrectDataOfWeather(request.longitude(), request.latitude()));
+    }
+
+    public List<WeatherResponseDto> getWeathers(WeatherRequest request) {
+        return weatherRepository.getWeathers(request.longitude(), request.latitude(), request.limit())
+                .stream()
+                .map(YandexResponseMapper::toWeatherResponseDto)
+                .collect(Collectors.toList());
     }
 
     /**

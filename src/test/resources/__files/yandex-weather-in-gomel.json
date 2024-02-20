@@ -1,0 +1,68 @@
+{
+  "now_dt": "2024-02-14T14:17:38.628506Z",
+  "info": {
+    "tzinfo": {
+      "name": "Europe/Minsk"
+    }
+  },
+  "fact": {
+    "temp": 2,
+    "feels_like": -1,
+    "condition": "overcast",
+    "wind_speed": 2.2,
+    "wind_dir": "n",
+    "pressure_mm": 750,
+    "wind_gust": 4
+  },
+  "forecasts": [
+    {
+      "date": "2024-02-14",
+      "parts": {
+        "day": {
+          "temp_min": 1,
+          "temp_avg": 2,
+          "temp_max": 2,
+          "wind_speed": 2.4,
+          "wind_gust": 4.8,
+          "wind_dir": "n",
+          "pressure_mm": 750,
+          "condition": "wet-snow",
+          "feels_like": -1
+        },
+        "evening": {
+          "temp_min": 2,
+          "temp_avg": 2,
+          "temp_max": 3,
+          "wind_speed": 2.2,
+          "wind_gust": 2.9,
+          "wind_dir": "n",
+          "pressure_mm": 751,
+          "condition": "wet-snow",
+          "feels_like": -1
+        },
+        "morning": {
+          "temp_min": 1,
+          "temp_avg": 2,
+          "temp_max": 2,
+          "wind_speed": 1.9,
+          "wind_gust": 2.4,
+          "wind_dir": "ne",
+          "pressure_mm": 748,
+          "condition": "wet-snow",
+          "feels_like": -1
+        },
+        "night": {
+          "temp_min": 2,
+          "temp_avg": 3,
+          "temp_max": 4,
+          "wind_speed": 1.5,
+          "wind_gust": 2.3,
+          "wind_dir": "ne",
+          "pressure_mm": 747,
+          "condition": "wet-snow",
+          "feels_like": 0
+        }
+      }
+    }
+  ]
+}
