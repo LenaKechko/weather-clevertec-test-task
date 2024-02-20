@@ -1,133 +1,64 @@
 package ru.clevertec.weathertesttask.entity;
 
-//@SpringBootTest
-//@ActiveProfiles("test")
-//@EnableConfigurationProperties
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {WireMockConfig.class})
-class IYandexResponseTest {
+import com.github.tomakehurst.wiremock.client.WireMock;
+import feign.FeignException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import ru.clevertec.weathertesttask.config.MongoContainerInitializer;
+import ru.clevertec.weathertesttask.data.Constants;
+import wiremock.org.eclipse.jetty.http.HttpHeader;
 
-//    @Autowired
-//    private WireMockServer mockWeatherService;
-//
-//    @Autowired
-//    private IYandexResponse yandexResponse;
-//
-//    @BeforeEach
-//    void setUp() throws IOException {
-//        WeatherMock.setupMockWeatherResponse(mockWeatherService);
-//    }
-//
-//    @Test
-//    public void getWeatherShouldReturnJsonWithWeather() {
-//        // given
-//        DayWeatherModel day = DayWeatherModelTestData.builder()
-//                .withMinTemperature(5.0)
-//                .withAvgTemperature(8.0)
-//                .withMaxTemperature(9.0)
-//                .withWindSpeed(3.8)
-//                .withWindGust(7.1)
-//                .withWindDir("ne")
-//                .withPressureInMm(568)
-//                .withCondition("cloudy")
-//                .build().buildDayWeatherModel();
-//        DayWeatherModel morning = DayWeatherModelTestData.builder()
-//                .withMinTemperature(1.0)
-//                .withAvgTemperature(4.0)
-//                .withMaxTemperature(7.0)
-//                .withWindSpeed(2.9)
-//                .withWindGust(5.6)
-//                .withWindDir("nw")
-//                .withPressureInMm(569)
-//                .withCondition("cloudy")
-//                .build().buildDayWeatherModel();
-//        DayWeatherModel night = DayWeatherModelTestData.builder()
-//                .withMinTemperature(2.0)
-//                .withAvgTemperature(3.0)
-//                .withMaxTemperature(4.0)
-//                .withWindSpeed(3.4)
-//                .withWindGust(4.5)
-//                .withWindDir("sw")
-//                .withPressureInMm(567)
-//                .withCondition("overcast")
-//                .build().buildDayWeatherModel();
-//        DayWeatherModel evening = DayWeatherModelTestData.builder()
-//                .withMinTemperature(4.0)
-//                .withAvgTemperature(4.0)
-//                .withMaxTemperature(5.0)
-//                .withWindSpeed(2.8)
-//                .withWindGust(4.3)
-//                .withWindDir("ne")
-//                .withPressureInMm(567)
-//                .withCondition("cloudy")
-//                .build().buildDayWeatherModel();
-//
-//        ForecastModel forecastFirstDay = ForecastModelTestData.builder()
-//                .withDate(LocalDate.parse("2023-12-29"))
-//                .withPartOfDayList(
-//                        new ForecastModel.PartOfDay(day, morning, night, evening)
-//                )
-//                .build().buildForecastModel();
-//
-//        day = DayWeatherModelTestData.builder()
-//                .withMinTemperature(7.0)
-//                .withAvgTemperature(9.0)
-//                .withMaxTemperature(10.0)
-//                .withWindSpeed(4.3)
-//                .withWindGust(8.4)
-//                .withWindDir("sw")
-//                .withPressureInMm(575)
-//                .withCondition("cloudy")
-//                .build().buildDayWeatherModel();
-//        morning = DayWeatherModelTestData.builder()
-//                .withMinTemperature(0.0)
-//                .withAvgTemperature(4.0)
-//                .withMaxTemperature(9.0)
-//                .withWindSpeed(2.8)
-//                .withWindGust(5.4)
-//                .withWindDir("e")
-//                .withPressureInMm(568)
-//                .withCondition("clear")
-//                .build().buildDayWeatherModel();
-//        night = DayWeatherModelTestData.builder()
-//                .withMinTemperature(0.0)
-//                .withAvgTemperature(1.0)
-//                .withMaxTemperature(3.0)
-//                .withWindSpeed(2.3)
-//                .withWindGust(3.4)
-//                .withWindDir("e")
-//                .withPressureInMm(568)
-//                .withCondition("clear")
-//                .build().buildDayWeatherModel();
-//        evening = DayWeatherModelTestData.builder()
-//                .withMinTemperature(4.0)
-//                .withAvgTemperature(5.0)
-//                .withMaxTemperature(6.0)
-//                .withWindSpeed(2.5)
-//                .withWindGust(3.4)
-//                .withWindDir("e")
-//                .withPressureInMm(576)
-//                .withCondition("cloudy")
-//                .build().buildDayWeatherModel();
-//
-//        ForecastModel forecastSecondDay = ForecastModelTestData.builder()
-//                .withDate(LocalDate.parse("2023-12-30"))
-//                .withPartOfDayList(
-//                        new ForecastModel.PartOfDay(day, morning, night, evening)
-//                )
-//                .build().buildForecastModel();
-//
-//        YandexResponse expected = new YandexResponse(ZonedDateTime.parse("2023-12-29T15:27:42.715478Z"),
-//                WeatherModelTestData.builder().build().buildWeatherModel(),
-//                InfoModelTestData.builder().build().buildInfoModel(),
-//                List.of(forecastFirstDay, forecastSecondDay));
-//
-//        // when
-//        YandexResponse actual = yandexResponse.getWeather(Location.GOMEL_LONGITUDE.getCoord(),
-//                Location.GOMEL_LATITUDE.getCoord(), 1);
-//
-//        // then
-//        assertThat(actual.date())
-//                .isEqualTo(expected.date());
-//    }
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWireMock(port = 9561)
+@ActiveProfiles("test")
+class IYandexResponseTest extends MongoContainerInitializer {
+
+    @Autowired
+    private IYandexResponse iYandexResponse;
+
+    @Test
+    public void getWeatherShouldReturnJsonWithWeather() {
+        // given
+        WireMock.givenThat(WireMock.get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(Constants.LONGITUDE.toString()))
+                .withQueryParam("lat", equalTo(Constants.LATITUDE.toString()))
+                .withQueryParam("limit", equalTo(Constants.LIMIT.toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withBodyFile("yandex-response-successful.json")
+                        .withStatus(HttpStatus.OK.value())));
+
+        // when
+        YandexResponse actualYandexResponse = iYandexResponse.getWeather(Constants.LONGITUDE, Constants.LATITUDE, Constants.LIMIT);
+
+        // then
+        Assertions.assertNotNull(actualYandexResponse);
+    }
+
+    @Test
+    public void getWeatherShouldReturnFeignServerException() {
+        // given
+        double longitude = -100.0;
+        double latitude = 100.0;
+        WireMock.givenThat(WireMock.get(WireMock.urlPathEqualTo("/"))
+                .withQueryParam("lon", equalTo(String.valueOf(longitude)))
+                .withQueryParam("lat", equalTo(String.valueOf(latitude)))
+                .withQueryParam("limit", equalTo(Constants.LIMIT.toString()))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.asString(), MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())));
+
+        // when - then
+        Assertions.assertThrows(FeignException.FeignServerException.class,
+                () -> iYandexResponse.getWeather(longitude, latitude, Constants.LIMIT));
+    }
 }

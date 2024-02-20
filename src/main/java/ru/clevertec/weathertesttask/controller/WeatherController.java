@@ -1,14 +1,13 @@
 package ru.clevertec.weathertesttask.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.weathertesttask.constant.Location;
 import ru.clevertec.weathertesttask.dto.ForecastWeatherResponseDto;
+import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 import ru.clevertec.weathertesttask.exception.IncorrectDataOfWeather;
 import ru.clevertec.weathertesttask.model.WeatherRequest;
-import ru.clevertec.weathertesttask.dto.WeatherResponseDto;
 import ru.clevertec.weathertesttask.sevice.WeatherService;
 
 import java.util.List;
@@ -29,7 +28,6 @@ public class WeatherController {
      * Для внеднения используется аннотация Autowired
      */
 
-    @Autowired
     private final WeatherService weatherService;
 
     /**
@@ -88,7 +86,7 @@ public class WeatherController {
         try {
             return ResponseEntity.ok(weatherService.getWeather(request));
         } catch (IncorrectDataOfWeather e) {
-            return ResponseEntity.notFound().header(e.getMessage()).build();
+            return ResponseEntity.notFound().header("Error message", e.getMessage()).build();
         }
     }
 

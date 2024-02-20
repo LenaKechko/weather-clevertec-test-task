@@ -9,19 +9,19 @@ import ru.clevertec.weathertesttask.entity.model.WeatherModel;
 public class WeatherModelTestData {
 
     @Builder.Default
-    private Double temperature = 4.0;
+    private Double temperature = Constants.TEMPERATURE;
     @Builder.Default
-    private Double feelsTemperature = 0.0;
+    private Double feelsTemperature = Constants.FEELS_TEMPERATURE;
     @Builder.Default
-    private String condition = "cloudy";
+    private String condition = Constants.CONDITION;
     @Builder.Default
-    private Double windSpeed = 2.6;
+    private Double windSpeed = Constants.WIND_SPEED;
     @Builder.Default
-    private Double windGust = 4.3;
+    private Double windGust = Constants.WIND_GUST;
     @Builder.Default
-    private String windDir = "ne";
+    private String windDir = Constants.WIND_DIR;
     @Builder.Default
-    private Integer pressureInMm = 567;
+    private Integer pressureInMm = Constants.PRESSURE_IN_MM;
 
     public WeatherModel buildWeatherModel() {
         return new WeatherModel(temperature, feelsTemperature, condition, windSpeed, windGust, windDir, pressureInMm);

@@ -1,5 +1,6 @@
 package ru.clevertec.weathertesttask.entity;
 
+import io.micrometer.core.annotation.Timed;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,8 @@ public interface IYandexResponse {
      * @param limit     количество дней
      * @return объект типа YandexResponse
      */
-    @GetMapping
+    @GetMapping("/")
+    @Timed("gettingWeatherFromYandex")
     YandexResponse getWeather(
             @RequestParam(name = "lon") double longitude,
             @RequestParam(name = "lat") double latitude,
